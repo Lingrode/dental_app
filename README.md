@@ -8,4 +8,4 @@
 - React Navigation
 - Expo
 
-#### Server side of the application is [here][https://github.com/Lingrode/dental_backend]
+#### Server side of the application is [here](https://github.com/Lingrode/dental_backend)
