@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358844343734",
+    "project_id": "dental-mobile-app",
+    "storage_bucket": "dental-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358844343734:android:e6575fb01afa46fc770d17",
+        "android_client_info": {
+          "package_name": "Dental.Clinic.White"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxHBTiBLWicfsnSY8ncI6Ax86lzAFjo3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
