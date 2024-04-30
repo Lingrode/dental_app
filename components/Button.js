@@ -1,34 +1,35 @@
 import React from "react";
-import styled from 'styled-components/native';
+import { TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
 
-const Button = ({ children, color, onPress }) => {
+const Button = ({ children, color = '#2A86FF', onPress }) => {
   return (
-    <ButtonWrapper onPress={onPress} color={color}>
-      <ButtonText>{children}</ButtonText>
-    </ButtonWrapper>
+    <TouchableOpacity style={[styles.buttonWrapper, { backgroundColor: color }]} onPress={onPress} color={color}>
+      <Text style={styles.buttonText}>{children}</Text>
+    </TouchableOpacity>
   );
 }
 
-
-Button.defaultProps = {
-  color: '#2A86FF'
-}
-
-const ButtonText = styled.Text`
-  font-family: 'SFUIText-Semibold';
-  font-size: 18px;
-  color: #fff;
-  `;
-// line-height: 22px;
-
-const ButtonWrapper = styled.TouchableOpacity`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 40px;
-  background-color: ${props => props.color};
-  text-align: center;
-  height: 50px;
-`;
+const styles = StyleSheet.create({
+  buttonWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+    textAlign: 'center',
+    height: 50,
+  },
+  buttonText: {
+    fontFamily: 'SFUIText-Semibold',
+    color: '#fff',
+    ...Platform.select({
+      ios: {
+        fontSize: 16,
+      },
+      android: {
+        fontSize: 18,
+      }
+    })
+  }
+})
 
 export default Button;

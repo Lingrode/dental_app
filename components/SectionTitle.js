@@ -1,10 +1,28 @@
-import { styled } from "styled-components/native";
+import { Text, StyleSheet, Platform } from "react-native";
 
-export default styled.Text`
-  font-family: 'SFUIText-Bold';
-  color: #000;
-  font-size: 24px;
-  line-height: 30px;
-  margin-top: 25px;
-  padding: 0 25px;
-`;
+const SectionTitle = ({ children }) => {
+  return (
+    <Text style={styles.title}>{children}</Text>
+  );
+};
+
+const styles = StyleSheet.create({ 
+  title: {
+    fontFamily: 'SFUIText-Bold',
+    color: '#000',
+    marginTop: 25,
+    padding: '0 25px',
+    paddingLeft: 25,
+    paddingRight: 25,
+    ...Platform.select({
+      ios: {
+        fontSize: 18
+      },
+      android: {
+        fontSize: 24
+      }
+    })
+  }
+})
+
+export default SectionTitle;

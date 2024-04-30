@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
@@ -14,14 +13,6 @@ import {
   EditAppointmentScreen,
   TeethChartScreen
 } from './screens';
-
-// TODO: Зробити редагування пацієнтів та прийомів ------------- DONE
-// TODO: Зробити popup для прийома в карті пацієнта (видалення, редагування) ------------- DONE
-// TODO: Поправити стилі для кнопок
-// TODO: Зробити формулу зубів
-// TODO: Зробити активний прийом, щоб він підсвічувався синім в списку прийомів ------------- DONE
-// TODO: Зробити екран формулу зубів
-// TODO: Якщо прийом завершено, то підсвічувати конкретний зуб ------------- DONE
 
 const Stack = createNativeStackNavigator();
 

@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Alert, TextInput, View, Keyboard, Animated, ScrollView, RefreshControl } from 'react-native';
-import { useFonts } from 'expo-font';
+import { Alert, TextInput, View, Keyboard, Animated, StyleSheet, RefreshControl, Platform, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import styled from 'styled-components/native';
 // import axios from 'axios;'
 import axios, * as others from 'axios';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
-import { Appointment, SectionTitle, PlusButton } from "../components";
+import { Appointment, PlusButton } from "../components"; 
 import { phoneFormat, patientsApi } from "../utils";
 
 
@@ -21,6 +19,11 @@ function PatientsScreen({ navigation, route }) {
         fontSize: 24,
         letterSpacing: 10,
         color: '#2A86FF',
+        ...Platform.select({
+          ios: {
+            fontSize: 22
+          }
+        })
       },
       headerStyle: {
         borderBottomColor: '#F3F3F3',
@@ -122,7 +125,7 @@ function PatientsScreen({ navigation, route }) {
   //   if (openRow && openRow !== rowKey) {
   //     rowMap[openRow]?.closeRow();
   //   }
-  //   setOpenRow(rowKey);
+  //   setOpenRow(rowKey);   
   // };
 
   const removePatient = id => {
@@ -152,20 +155,19 @@ function PatientsScreen({ navigation, route }) {
   }
 
   return (
-    <Container>
+    <View style={styles.container}>
       {data && (
         <>
           <View style={{ marginLeft: 25, marginRight: 25, marginTop: 15, marginBottom: 20 }}>
-            <InputWrapper>
-              <TextInput onChange={onSearch} ref={inputRef} placeholder="Пошук пацієнта" style={{ fontSize: 20, color: '#000', fontFamily: 'SFUIText-Regular' }}></TextInput>
-            </InputWrapper>
+            <View style={styles.inputWrapper}>
+              <TextInput onChange={onSearch} ref={inputRef} placeholder="Пошук пацієнта" style={styles.input}></TextInput>
+            </View>
           </View>
 
           <SwipeListView
             rightOpenValue={-180}
             closeOnScroll={true}
             closeOnRowPress={true}
-            // closeOnRowBeginSwipe={true}
             disableRightSwipe={true}
             keyExtractor={item => item._id}
             ref={swipeListViewRef}
@@ -188,19 +190,19 @@ function PatientsScreen({ navigation, route }) {
             )}
             renderHiddenItem={({ item }) => (
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <SwipeViewButton
+                <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('EditPatient', { patient: item });
                     console.log(item);
                   }}
-                  style={{ backgroundColor: '#B4C1CB', width: 90, height: '100%' }}>
+                  style={[styles.swipeViewButton, { backgroundColor: '#B4C1CB', width: 90, height: '100%' }]}>
                   <MaterialCommunityIcons style={{ position: 'relative', left: 30 }} name="pencil" size={32} color="white" />
-                </SwipeViewButton>
-                <SwipeViewButton
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={removePatient.bind(this, item._id)}
-                  style={{ backgroundColor: '#F85A5A', height: '100%', width: 90 }}>
+                  style={[styles.swipeViewButton, { backgroundColor: '#F85A5A', height: '100%', width: 90 }]}>
                   <MaterialCommunityIcons style={{ position: 'relative', left: 30 }} name="close" size={32} color="white" />
-                </SwipeViewButton>
+                </TouchableOpacity>
               </View>
             )}
           />
@@ -211,25 +213,40 @@ function PatientsScreen({ navigation, route }) {
           <PlusButton onPress={() => navigation.navigate("AddPatient")} />
         </Animated.View>
       )}
-    </Container>
+    </View>
   );
 }
 
-const InputWrapper = styled.View`
-  padding: 10px 25px;
-  border-width: 1px;
-  border-color: #f0f0f0;
-  border-radius: 50px;
-`;
-
-const SwipeViewButton = styled.TouchableHighlight`
-  justify-content: center;
-  height: 100%;
-`;
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #fff;
-`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  inputWrapper: {
+    paddingTop: 10,
+    paddingRight: 25,
+    paddingBottom: 10,
+    paddingLeft: 25,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    borderRadius: 50,
+  },
+  input: {
+    color: '#000',
+    fontFamily: 'SFUIText-Regular',
+    ...Platform.select({
+      ios: {
+        fontSize: 16,
+      },
+      android: {
+        fontSize: 20
+      }
+    })
+  },
+  swipeViewButton: {
+    justifyContent: 'center',
+    height: '100%'
+  }
+})
 
 export default PatientsScreen;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { TouchableOpacity, Alert, Animated, View } from 'react-native';
+import { TouchableOpacity, Alert, Animated, View, Platform, StyleSheet, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import _ from "lodash";
 import axios, * as others from 'axios';
 import Swipeable from 'react-native-swipeable-row';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import moment from "moment";
 
 import { Appointment, SectionTitle, PlusButton } from "../components";
@@ -16,14 +15,14 @@ function HomeScreen({ navigation, route }) {
     navigation.setOptions({
       header: () =>
       (
-        <Header>
+        <View style={styles.header}>
           <View>
-            <HeaderText style={{ color: '#2A86FF' }}>Журнал прийомів</HeaderText>
+            <Text style={[{ color: '#2A86FF' }, styles.headerText]}>Журнал прийомів</Text>
           </View>
-          <TouchableOpacity style={{ marginRight: 10, position: 'absolute', right: 20, top: 52 }} onPress={() => navigation.navigate('Patients')}>
+          <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.navigate('Patients')}>
             <MaterialCommunityIcons name="account-supervisor" size={32} color="#2A86FF" />
           </TouchableOpacity>
-        </Header>
+        </View>
 
       ),
     });
@@ -48,7 +47,6 @@ function HomeScreen({ navigation, route }) {
         let appointments = data.data;
         appointments.sort((a, b) => new Date(a.originalDate) - new Date(b.originalDate))
 
-        // Сортуємо прийоми за часом 
         appointments.forEach(section => {
           section.data.sort((a, b) => {
             const timeA = moment(a.time, 'HH:mm');
@@ -69,7 +67,6 @@ function HomeScreen({ navigation, route }) {
 
   useEffect(fetchAppointments, [route.params]);
 
-  // TODO: Продумати видалення прийомів
   const removeAppointment = id => {
     Alert.alert(
       'Видалення прийому',
@@ -151,19 +148,48 @@ function HomeScreen({ navigation, route }) {
   );
 }
 
-const HeaderText = styled.Text`
-  font-family: 'SFUIText-Heavy';
-  font-size: 32px;
-  color: '#2A86FF';
-  margin-top: 45px;
-  margin-left: 25px
-`;
-
-const Header = styled.View`
-  border-bottom-width: 2px;
-  border-bottom-color: #F3F3F3;
-  height: 110px;
-`;
+const styles = StyleSheet.create({
+  header: {
+    borderBottomColor: '#f3f3f3',
+    borderBottomWidth: 2,
+    ...Platform.select({
+      ios: {
+        height: 120,
+      },
+      android: {
+        height: 110,
+      }
+    })
+  },
+  headerText: {
+    fontFamily: 'SFUIText-Heavy',
+    color: '#2A86FF',
+    marginLeft: 25,
+    ...Platform.select({
+      ios: {
+        fontSize: 24,
+        marginTop: 65
+      },
+      android: {
+        fontSize: 32,
+        marginTop: 45
+      }
+    })
+  },
+  headerIcon: {
+    position: 'absolute',
+    ...Platform.select({
+      ios: {
+        right: 30,
+        top: 66
+      },
+      android: {
+        right: 30,
+        top: 52,
+      }
+    })
+  },
+});
 
 const SwipeViewButton = styled.TouchableHighlight`
   justify-content: center;

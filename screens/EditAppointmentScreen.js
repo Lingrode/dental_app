@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Platform, Modal } from 'react-native';
 import styled from 'styled-components';
 
 import { Select, Box, Center, NativeBaseProvider } from "native-base";
+import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -22,6 +23,11 @@ function EditAppointmentScreen({ route, navigation }) {
         fontSize: 24,
         letterSpacing: 10,
         color: '#2A86FF',
+        ...Platform.select({
+          ios: {
+            fontSize: 22,
+          }
+        })
       },
       headerStyle: {
         borderBottomColor: '#F3F3F3',
@@ -33,6 +39,8 @@ function EditAppointmentScreen({ route, navigation }) {
   }, [navigation])
 
   const { appointment } = route.params;
+
+  const [selectedValue, setSelectedValue] = useState(appointment.diagnosis || 'Пульпіт');
 
   const [values, setValues] = useState({
     diagnosis: appointment.diagnosis || 'Пульпіт',
@@ -162,6 +170,16 @@ function EditAppointmentScreen({ route, navigation }) {
     return `${hours}:${minutes}`;
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={{ justifyContent: 'center' }}>
@@ -174,12 +192,12 @@ function EditAppointmentScreen({ route, navigation }) {
           keyboardType='numeric'
         />
 
-        <NativeBaseProvider>
+        {/* <NativeBaseProvider>
           <Center flex={1} style={{ marginBottom: 20 }}>
 
             <Box width='100%'>
               <Select
-                style={{}}
+                style={styles.select}
                 maxWidth='360px'
                 accessibilityLabel="Choose Service"
                 placeholder="Оберіть діагноз"
@@ -205,7 +223,73 @@ function EditAppointmentScreen({ route, navigation }) {
             </Box>
 
           </Center>
-        </NativeBaseProvider>
+        </NativeBaseProvider> */}
+
+        {/* <Pressable onPress={handleOpenModal}>
+          <TextInput
+            style={styles.input}
+            // value={selectedValue}
+            editable={false} // prevent keyboard from showing
+          />
+        </Pressable> */}
+
+        {Platform.OS === 'ios' ? (
+          <>
+            <Pressable onPress={handleOpenModal}>
+              <TextInput
+                style={styles.selectInput}
+                value={selectedValue}
+                editable={false} // prevent keyboard from showing
+              />
+            </Pressable>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={handleCloseModal}
+            >
+              <View>
+                <View style={styles.modalView}>
+                  <Picker
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setSelectedValue(itemValue);
+                      setFieldValue('diagnosis', itemValue);
+                    }}
+                    style={{ height: 350, width: '100%' }}
+                  >
+                    <Picker.Item label="Пульпіт" value="Пульпіт" />
+                    <Picker.Item label="Періодонтит" value="Періодонтит" />
+                    <Picker.Item label="Пародонтит" value="Пародонтит" />
+                    <Picker.Item label="Періостит" value="Періостит" />
+                    <Picker.Item label="Флюороз" value="Флюороз" />
+                  </Picker>
+                  <Button onPress={handleCloseModal} title="Done" />
+                </View>
+              </View>
+            </Modal>
+          </>
+        ) : (
+          <View style={styles.select}>
+            <Picker
+              selectedValue={selectedValue}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedValue(itemValue);
+                setFieldValue('diagnosis', itemValue);
+              }}
+
+              mode="dropdown"
+              itemStyle='color: "#f0f0f0"'
+            >
+              <Picker.Item label="Пульпіт" value="Пульпіт" style={styles.selectValues} />
+              <Picker.Item label="Періодонтит" value="Періодонтит" style={styles.selectValues} />
+              <Picker.Item label="Пародонтит" value="Пародонтит" style={styles.selectValues} />
+              <Picker.Item label="Періостит" value="Періостит" style={styles.selectValues} />
+              <Picker.Item label="Флюороз" value="Флюороз" style={styles.selectValues} />
+            </Picker>
+          </View>
+        )}
 
         <Input
           name='phoneNumber'
@@ -351,7 +435,36 @@ const styles = StyleSheet.create({
     marginTop: -10,
     fontSize: 18,
     color: '#000'
-  }
+  },
+  select: {
+    borderBottomColor: '#f0f0f0',
+    borderBottomWidth: 1,
+    marginBottom: 20,
+    marginLeft: -5,
+    marginRight: -5,
+  },
+  selectValues: {
+    ...Platform.select({
+      ios: {
+        fontSize: 16
+      },
+      android: {
+        fontSize: 20,
+        borderBottomWidth: 1
+      }
+    })
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+
+  },
 });
 
 export default EditAppointmentScreen;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -20,11 +20,16 @@ function AddPatientScreen({ route, navigation }) {
         fontSize: 24,
         letterSpacing: 10,
         color: '#2A86FF',
+        ...Platform.select({
+          ios: {
+            fontSize: 22,
+          }
+        })
       },
       headerStyle: {
         borderBottomColor: '#F3F3F3',
         borderBottomWidth: 50,
-        elevation: 0.8
+        elevation: 0.8,
       },
       headerShadowVisible: false,
     });

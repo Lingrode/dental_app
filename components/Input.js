@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Animated, StyleSheet, TextInput, View } from 'react-native';
+import { Animated, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue, name, ...props }) => {
@@ -78,7 +78,10 @@ const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue,
     }),
     fontSize: labelPosition.interpolate({
       inputRange: [0, 1],
-      outputRange: [18, 16],
+      outputRange: Platform.select({
+        ios: [14, 12],
+        android: [18, 16],
+      }),
     }),
     color: labelPosition.interpolate({
       inputRange: [0, 1],
@@ -138,7 +141,15 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: 5,
     paddingLeft: 10,
-    fontFamily: 'SFUIText-Regular'
+    fontFamily: 'SFUIText-Regular',
+    ...Platform.select({
+      ios: {
+        fontSize: 16,
+      },
+      android: {
+        fontSize: 20,
+      }
+    })
   },
   errorText: {
     marginTop: 5,

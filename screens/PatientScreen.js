@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ActivityIndicator, Linking, StyleSheet, Alert, Animated } from 'react-native';
+import { Text, View, ActivityIndicator, Linking, StyleSheet, Alert, Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MenuProvider, Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
@@ -19,8 +19,12 @@ function PatientScreen({ route, navigation }) {
       headerTitleStyle: {
         fontFamily: 'SFUIText-Bold',
         fontSize: 24,
-        letterSpacing: 10,
         color: '#2A86FF',
+        ...Platform.select({
+          ios: {
+            fontSize: 22,
+          }
+        })
       },
       headerStyle: {
         borderBottomColor: '#F3F3F3',
@@ -99,7 +103,7 @@ function PatientScreen({ route, navigation }) {
 
 
       <PatientDetails>
-        <PatientFullName>{fullname}</PatientFullName>
+        <PatientFullName style={styles.patientFullName}>{fullname}</PatientFullName>
         <GrayText>{phoneFormat(phone)}</GrayText>
 
         <PatientButtons>
@@ -108,7 +112,7 @@ function PatientScreen({ route, navigation }) {
           </FormulaButtonView>
           <PhoneButtonView>
             <Button onPress={() => Linking.openURL('tel:' + phone)} color="#84D269">
-              <FontAwesome name="phone" size={23} color="white" style={{ lineHeight: 60 }} />
+              <FontAwesome name="phone" size={23} color="white" style={styles.buttonIcon} />
             </Button>
           </PhoneButtonView>
         </PatientButtons>
@@ -117,7 +121,7 @@ function PatientScreen({ route, navigation }) {
       <PatientAppointments>
         <Container>
 
-          <AppointmentsTitle>Прийоми</AppointmentsTitle>
+          <Text style={styles.appointmentsTitle}>Прийоми</Text>
 
           <GestureHandlerRootView>
 
@@ -158,7 +162,7 @@ function PatientScreen({ route, navigation }) {
                         },
                       }}
                     >
-                      <Text style={{ fontFamily: 'SFUIText-Regular', fontSize: 16, paddingTop: 6, paddingBottom: 6 }}>Редагувати</Text>
+                      <Text style={styles.menuText}>Редагувати</Text>
                       <FontAwesome name="edit" size={24} color="black" />
                     </MenuOption>
                     <Divider />
@@ -172,29 +176,30 @@ function PatientScreen({ route, navigation }) {
                         },
                       }}
                     >
-                      <Text style={{ fontFamily: 'SFUIText-Regular', fontSize: 16, paddingTop: 6, paddingBottom: 6 }}>Видалити</Text>
+                      <Text style={styles.menuText}>Видалити</Text>
                       <MaterialCommunityIcons name="delete" size={23} color="black" />
                     </MenuOption>
                   </MenuOptions>
                 </Menu>
 
-                <AppointmentCardRow>
+                <View style={styles.appointmentCardRow}>
                   <Ionicons name="medical" size={18} color="#A3A3A3" />
-                  <AppointmentCardLabel>
-                    Зуб: <Text style={{ fontFamily: "SFUIText-Bold" }}>{appointment.toothNumber}</Text>
-                  </AppointmentCardLabel>
-                </AppointmentCardRow>
+                  <Text style={styles.appointmentCardLabel}>
+                    Зуб: <Text style={styles.appointmentCardText}>{appointment.toothNumber}</Text>
+                  </Text>
+                </View>
 
-                <AppointmentCardRow>
+                <View style={styles.appointmentCardRow}>
                   <MaterialCommunityIcons name="clipboard-text" size={18} color="#A3A3A3" />
-                  <AppointmentCardLabel>
-                    Діагноз: <Text style={{ fontFamily: "SFUIText-Bold" }}>{appointment.diagnosis}</Text>
-                  </AppointmentCardLabel>
-                </AppointmentCardRow>
-                <AppointmentCardRow style={{ marginTop: 20, justifyContent: "space-between" }}>
+                  <Text style={styles.appointmentCardLabel}>
+                    Діагноз: <Text style={styles.appointmentCardText}>{appointment.diagnosis}</Text>
+                  </Text>
+                </View>
+
+                <View style={[styles.appointmentCardRow, { marginTop: 20, justifyContent: "space-between" }]}>
                   <Badge style={{ width: 195 }} active>{appointment.date} - {appointment.time}</Badge>
                   <Badge style={{ width: 92 }} color="green">{appointment.price} ₴</Badge>
-                </AppointmentCardRow>
+                </View>
               </AppointmentCard>
             )}
           </GestureHandlerRootView>
@@ -214,33 +219,101 @@ const styles = StyleSheet.create({
   moreButton: {
     position: 'absolute',
     right: -8,
-    top: 5
+    top: 5,
+    ...Platform.select({
+      ios: {
+        alignItems: 'center',
+        paddingLeft: 10,
+        paddingRight: 10,
+        right: -17,
+      }
+    })
+  },
+  menuText: {
+    fontFamily: 'SFUIText-Regular',
+    paddingTop: 6,
+    paddingBottom: 6,
+    ...Platform.select({
+      ios: {
+        fontSize: 13,
+      },
+      android: {
+        fontSize: 16,
+      }
+    })
   },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: "#7F8487",
   },
+  patientFullName: {
+    ...Platform.select({
+      ios: {
+        fontSize: 26,
+        marginBottom: 5
+      }
+    })
+  },
+  buttonIcon: {
+    ...Platform.select({
+      ios: {
+        lineHeight: 48,
+        width: 20
+      },
+      android: {
+        lineHeight: 40,
+        width: 23
+      }
+    })
+  },
+  appointmentsTitle: {
+    fontFamily: 'SFUIText-Bold',
+    marginBottom: 20,
+    ...Platform.select({
+      ios: {
+        fontSize: 20,
+      },
+      android: {
+        fontSize: 24,
+      }
+    })
+  },
+  appointmentCardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        marginTop: 6,
+        marginBottom: 6
+      },
+      android: {
+        marginTop: 7.5,
+        marginBottom: 7.5
+      }
+    })
+  },
+  appointmentCardLabel: {
+    fontFamily: 'SFUIText-Regular',
+    marginLeft: 14.5,
+    lineHeight: 21,
+    ...Platform.select({
+      ios: {
+        fontSize: 14,
+      },
+      android: {
+        fontSize: 18,
+      }
+    })
+  },
+  appointmentCardText: {
+    fontFamily: 'SFUIText-Bold',
+    ...Platform.select({
+      ios: {
+        fontSize: 14,
+      }
+    })
+  }
 });
-
-const AppointmentsTitle = styled.Text`
-  font-family: "SFUIText-Bold";
-  font-size: 24px;
-  margin-bottom: 20px;
-`;
-
-const AppointmentCardLabel = styled.Text`
-  font-family: "SFUIText-Regular";
-  font-size: 18px;
-  line-height: 21px;
-  margin-left: 14.5px;
-`;
-
-const AppointmentCardRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-top: 7.5px;
-  margin-bottom: 7.5px;
-`;
 
 const AppointmentCard = styled.View`
   padding: 12.5px 25px 10.5px;

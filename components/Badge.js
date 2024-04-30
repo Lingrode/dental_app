@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import { StyleSheet, Platform, Text } from 'react-native';
 
 const getColor = ({ active, color }) => {
   const colors = {
@@ -28,14 +28,41 @@ const getColor = ({ active, color }) => {
   return result;
 };
 
-export default styled.Text`
-  background: ${props => getColor(props).background};
-  color: ${props => getColor(props).color};
-  border-radius: 18px;
-  font-family: 'SFUIText-Heavy';
-  text-align: center;
-  font-size: 18px;
-  width: 75px;
-  height: 35px;
-  line-height: 38px;
-`;
+const styles = StyleSheet.create({
+  text: {
+    borderRadius: 18,
+    textAlign: 'center',
+    height: 35,
+    fontFamily: 'SFUIText-Heavy',
+    paddingLeft: 13,
+    paddingRight: 13,
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        fontSize: 13,
+        overflow: 'hidden',
+        lineHeight: 31,
+      },
+      android: {
+        fontSize: 18,
+        lineHeight: 38,
+      }
+    })
+  }
+});
+
+const ColoredText = (props) => {
+  const color = getColor(props);
+  return (
+    <Text
+      style={[styles.text,
+      { backgroundColor: color.background, color: color.color }
+      ]}
+    >
+      {props.children}
+    </Text>
+  );
+};
+
+export default ColoredText;

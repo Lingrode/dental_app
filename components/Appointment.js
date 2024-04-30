@@ -1,4 +1,4 @@
-import { View, Animated } from 'react-native';
+import { View, Text, Animated, StyleSheet, Platform } from 'react-native';
 import { useRef } from 'react';
 import styled from 'styled-components/native';
 
@@ -38,19 +38,19 @@ function Appointment({ onPress, item, active }) {
         style={{ opacity: fadeAnim }}
         activeOpacity={1}
       >
-        <Avatar
-          style={{
+        <View
+          style={[styles.avatar, {
             backgroundColor: avatarColors.background,
-          }}
+          }]}
         >
-          <Letter style={{ color: avatarColors.color }}>{patient.fullname[0].toUpperCase()}</Letter>
-        </Avatar>
+          <Text style={[styles.letter, { color: avatarColors.color }]}>{patient.fullname[0].toUpperCase()}</Text>
+        </View>
         <View style={{ flex: 1 }}>
-          <FullName>{patient.fullname}</FullName>
+          <Text style={styles.fullname}>{patient.fullname}</Text>
           <GrayText>{diagnosis}</GrayText>
         </View>
         {time && <Badge active={active}>{time}</Badge>}
-      </AnimatedTouchableOpacity> 
+      </AnimatedTouchableOpacity>
     </View>
   );
 };
@@ -62,25 +62,58 @@ Appointment.defaultProps = {
   items: []
 }
 
-const Letter = styled.Text`
-  font-size: 22px;
-  font-family: 'SFUIText-Bold';
-  line-height: 26px;
-`;
+const styles = StyleSheet.create({
+  letter: {
+    fontFamily: 'SFUIText-Bold',
+    ...Platform.select({
+      ios: {
+        fontSize: 18,
+        lineHeight: 36,
+      },
+      android: {
+        fontSize: 22,
+        lineHeight: 26,
+      }
+    })
+  },
+  fullname: {
+    fontFamily: 'SFUIText-Bold',
+    ...Platform.select({
+      ios: {
+        fontSize: 14,
+        marginBottom: 3
+      },
+      android: {
+        fontSize: 18
+      }
+    })
+  },
+  avatar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    marginRight: 16,
+    ...Platform.select({
+      ios: {
+        width: 47,
+        height: 47,
+      },
+      android: {
+        width: 50,
+        height: 50,
+      }
+    })
+  }
+})
 
-const FullName = styled.Text`
-  font-family: 'SFUIText-Bold';
-  font-size: 18px;
-`;
-
-const Avatar = styled.View`
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  width: 50px;
-  height: 50px;
-  margin-right: 16px;
-`;
+// const Avatar = styled.View`
+//   align-items: center;
+//   justify-content: center;
+//   border-radius: 50px;
+//   width: 50px;
+//   height: 50px;
+//   margin-right: 16px;
+// `;
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(styled.TouchableOpacity`
   align-items: center;
