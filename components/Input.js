@@ -124,6 +124,11 @@ const styles = StyleSheet.create({
     height: 65,
     width: 360,
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        width: 'auto'
+      }
+    })
   },
   label: {
     position: 'absolute',

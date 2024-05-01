@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Platform, Modal } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Platform, Modal, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import styled from 'styled-components';
 
-import { Select, Box, Center, NativeBaseProvider } from "native-base";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -11,7 +10,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { appointmentsApi } from "../utils/api";
 
 import { Button, Input } from "../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 function EditAppointmentScreen({ route, navigation }) {
   useEffect(() => {
@@ -141,7 +139,7 @@ function EditAppointmentScreen({ route, navigation }) {
   };
 
   const confirmIOSDate = () => {
-    setDateOfAppointment(formatDate(currentDate));
+    setDate(formatDate(date));
     toggleDatepicker();
   }
 
@@ -192,104 +190,74 @@ function EditAppointmentScreen({ route, navigation }) {
           keyboardType='numeric'
         />
 
-        {/* <NativeBaseProvider>
-          <Center flex={1} style={{ marginBottom: 20 }}>
+        {
+          Platform.OS === 'ios' ? (
+            <>
+              {/* <Text>Діагноз</Text> */}
+              <TouchableOpacity onPress={handleOpenModal} style={styles.input}>
+                <Text style={styles.inputText}>{selectedValue}</Text>
+              </TouchableOpacity>
 
-            <Box width='100%'>
-              <Select
-                style={styles.select}
-                maxWidth='360px'
-                accessibilityLabel="Choose Service"
-                placeholder="Оберіть діагноз"
-                minWidth='container'
-                borderColor='#F0F0F0'
-                placeholderTextColor='#A0A2A4'
-                fontSize='20px'
-                borderLeftWidth='0'
-                borderTopWidth='0'
-                borderRightWidth='0'
-                _selectedItem={{
-                  bg: 'amber.100',
-                }}
-                mt={5}
-                defaultValue={appointment.diagnosis}
-                onValueChange={setFieldValue.bind(this, 'diagnosis')}>
-                <Select.Item label="Пульпіт" value="Пульпіт" />
-                <Select.Item label="Періодонтит" value="Періодонтит" />
-                <Select.Item label="Пародонтит" value="Пародонтит" />
-                <Select.Item label="Періостит" value="Періостит" />
-                <Select.Item label="Флюороз" value="Флюороз" />
-              </Select>
-            </Box>
-
-          </Center>
-        </NativeBaseProvider> */}
-
-        {/* <Pressable onPress={handleOpenModal}>
-          <TextInput
-            style={styles.input}
-            // value={selectedValue}
-            editable={false} // prevent keyboard from showing
-          />
-        </Pressable> */}
-
-        {Platform.OS === 'ios' ? (
-          <>
-            <Pressable onPress={handleOpenModal}>
-              <TextInput
-                style={styles.selectInput}
-                value={selectedValue}
-                editable={false} // prevent keyboard from showing
-              />
-            </Pressable>
-
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={handleCloseModal}
-            >
-              <View>
+              {/* <TouchableWithoutFeedback onPress={handleCloseModal}> */}
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCloseModal}
+              // style={{ zIndex: 999 }}
+              >
                 <View style={styles.modalView}>
+                  {/* <TouchableOpacity onPress={handleCloseModal} activeOpacity={1}> */}
+                  <View>
+                    <Picker
+                      selectedValue={selectedValue}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelectedValue(itemValue);
+                        setFieldValue('diagnosis', itemValue);
+                      }}
+                      style={{ width: 350 }}
+                    >
+                      <Picker.Item label="Пульпіт" value="Пульпіт" />
+                      <Picker.Item label="Періодонтит" value="Періодонтит" />
+                      <Picker.Item label="Пародонтит" value="Пародонтит" />
+                      <Picker.Item label="Періостит" value="Періостит" />
+                      <Picker.Item label="Флюороз" value="Флюороз" />
+                    </Picker>
+                    <View style={{ marginTop: 20, }}>
+                      <Button onPress={handleCloseModal} color='#2A86FF'>
+                        <Ionicons name="checkmark-sharp" size={24} color="white" />
+                        Зберегти
+                      </Button>
+                    </View>
+                  </View>
+                  {/* </TouchableOpacity> */}
+                </View>
+              </Modal>
+              {/* </TouchableWithoutFeedback> */}
+            </>
+          ) :
+            (
+              <TouchableWithoutFeedback onPress={handleCloseModal}>
+                <View style={styles.select}>
                   <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, itemIndex) => {
                       setSelectedValue(itemValue);
                       setFieldValue('diagnosis', itemValue);
                     }}
-                    style={{ height: 350, width: '100%' }}
+                    mode="dropdown"
+                    itemStyle='color: "#f0f0f0"'
+                    style={{ borderRadius: 10 }}
                   >
-                    <Picker.Item label="Пульпіт" value="Пульпіт" />
-                    <Picker.Item label="Періодонтит" value="Періодонтит" />
-                    <Picker.Item label="Пародонтит" value="Пародонтит" />
-                    <Picker.Item label="Періостит" value="Періостит" />
-                    <Picker.Item label="Флюороз" value="Флюороз" />
+                    <Picker.Item label="Пульпіт" value="Пульпіт" style={styles.selectValues} />
+                    <Picker.Item label="Періодонтит" value="Періодонтит" style={styles.selectValues} />
+                    <Picker.Item label="Пародонтит" value="Пародонтит" style={styles.selectValues} />
+                    <Picker.Item label="Періостит" value="Періостит" style={styles.selectValues} />
+                    <Picker.Item label="Флюороз" value="Флюороз" style={styles.selectValues} />
                   </Picker>
-                  <Button onPress={handleCloseModal} title="Done" />
                 </View>
-              </View>
-            </Modal>
-          </>
-        ) : (
-          <View style={styles.select}>
-            <Picker
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) => {
-                setSelectedValue(itemValue);
-                setFieldValue('diagnosis', itemValue);
-              }}
-
-              mode="dropdown"
-              itemStyle='color: "#f0f0f0"'
-            >
-              <Picker.Item label="Пульпіт" value="Пульпіт" style={styles.selectValues} />
-              <Picker.Item label="Періодонтит" value="Періодонтит" style={styles.selectValues} />
-              <Picker.Item label="Пародонтит" value="Пародонтит" style={styles.selectValues} />
-              <Picker.Item label="Періостит" value="Періостит" style={styles.selectValues} />
-              <Picker.Item label="Флюороз" value="Флюороз" style={styles.selectValues} />
-            </Picker>
-          </View>
-        )}
+              </TouchableWithoutFeedback>
+            )}
 
         <Input
           name='phoneNumber'
@@ -304,32 +272,47 @@ function EditAppointmentScreen({ route, navigation }) {
           <DateView>
             <LabelDate>Дата</LabelDate>
 
-            {showDatepicker && (
-              <DateTimePicker
-                mode='date'
-                display='spinner'
-                value={date}
-                textColor="#000"
-                is24Hour={true}
-                onChange={onChangeDate}
-                style={{ fontWeight: 700 }}
-              />
-            )}
+            <View style={styles.datePicker}>
+              {showDatepicker && (
+                <View >
+                  <DateTimePicker
+                    mode='date'
+                    display='spinner'
+                    value={date}
+                    textColor="#000"
+                    is24Hour={true}
+                    onChange={onChangeDate}
+                    onPressIn={toggleDatepicker}
+                  />
+                </View>
+              )}
 
-            {showDatepicker && Platform.OS === 'ios' && (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <TouchableOpacity onPress={toggleDatepicker}>
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
+              {showDatepicker && Platform.OS === 'ios' && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                  <TouchableOpacity onPress={toggleDatepicker} style={
+                    [
+                      styles.datePickerButton,
+                      styles.button,
+                    ]
+                  }>
+                    <Text style={{ color: '#EE204D' }}>Відміна</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity onPress={confirmIOSDate}>
-                  <Text>Confirm</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+                  <TouchableOpacity onPress={confirmIOSDate} style={
+                    [
+                      styles.datePickerButton,
+                      styles.button,
+                      { backgroundColor: '#87CC6F' }
+                    ]
+                  }>
+                    <Text style={{ color: '#fff' }}>Підтвердити</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
 
-            {!showDatepicker && (
-              <Pressable onPress={toggleDatepicker}>
+            {!showDatepicker && Platform.OS === 'android' && (
+              <Pressable onPressIn={toggleDatepicker}>
                 <TextInput
                   placeholder={'Sat Aug 21 2004'}
                   editable={false}
@@ -339,34 +322,77 @@ function EditAppointmentScreen({ route, navigation }) {
                 />
               </Pressable>
             )}
+
+            {!showDatepicker && Platform.OS === 'ios' && (
+              <Pressable >
+                <TextInput
+                  onPressIn={toggleDatepicker}
+                  placeholder={'Sat Aug 21 2004'}
+                  editable={false}
+                  value={formatDate(date)}
+                  onChangeText={setFieldValue.bind(this, 'date')}
+                  style={{ fontSize: 16, color: '#000' }}
+                />
+              </Pressable>
+            )}
+
           </DateView>
 
           <TimeView>
             <LabelDate>Час</LabelDate>
 
-            {showTimepicker && (
-              <DateTimePicker
-                mode='time'
-                display='spinner'
-                value={time}
-                is24Hour={true}
-                onChange={onChangeTime}
-              />
+            <View style={styles.timePicker}>
+              {showTimepicker && (
+                <View>
+                  <DateTimePicker
+                    mode='time'
+                    display='spinner'
+                    value={time}
+                    is24Hour={true}
+                    onChange={onChangeTime}
+                    onPressIn={toggleDatepicker}
+                  />
+                </View>
+              )}
+
+              {showTimepicker && Platform.OS === 'ios' && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                  <TouchableOpacity onPress={toggleTimepicker} style={
+                    [
+                      styles.datePickerButton,
+                      styles.button,
+                    ]
+                  }>
+                    <Text style={{ color: '#EE204D' }}>Відміна</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={confirmIOSDate} style={
+                    [
+                      styles.datePickerButton,
+                      styles.button,
+                      { backgroundColor: '#87CC6F' }
+                    ]
+                  }>
+                    <Text style={{ color: '#fff' }}>Підтвердити</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+
+            {!showTimepicker && Platform.OS === 'ios' && (
+              <Pressable >
+                <TextInput
+                  onPressIn={toggleTimepicker}
+                  placeholder={'12:00'}
+                  editable={false}
+                  value={formatTime(time)}
+                  onChangeText={setFieldValue.bind(this, 'time')}
+                  style={{ fontSize: 16, color: '#000' }}
+                />
+              </Pressable>
             )}
 
-            {showTimepicker && Platform.OS === 'ios' && (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                <TouchableOpacity onPress={toggleTimepicker}>
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={confirmIOSDate}>
-                  <Text>Confirm</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {!showTimepicker && (
+            {!showTimepicker && Platform.OS === 'android' && (
               <Pressable onPress={toggleTimepicker}>
                 <TextInput
                   placeholder={'12:00'}
@@ -374,7 +400,6 @@ function EditAppointmentScreen({ route, navigation }) {
                   value={formatTime(time)}
                   onChangeText={setFieldValue.bind(this, 'time')}
                   style={{ fontSize: 20, color: '#000' }}
-
                 />
               </Pressable>
             )}
@@ -382,7 +407,7 @@ function EditAppointmentScreen({ route, navigation }) {
 
         </View>
 
-      </View>
+      </View >
       <View style={{ marginTop: 20, }}>
         <Button onPress={onSubmit} color='#2A86FF'>
           <Ionicons name="checkmark-sharp" size={24} color="white" />
@@ -417,12 +442,17 @@ const LabelDate = styled.Text`
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    margin: 12,
+    marginTop: 6,
+    marginBottom: 12,
+    marginLeft: 0,
+    marginRight: 0,
     borderBottomWidth: 1,
     padding: 10,
-    borderColor: 'gray',
+    borderColor: '#F0F0F0',
     borderRadius: 5,
-    fontSize: 18
+  },
+  inputText: {
+    fontSize: 16
   },
   container: {
     backgroundColor: '#fff',
@@ -431,10 +461,34 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   datePicker: {
-    height: 120,
-    marginTop: -10,
-    fontSize: 18,
-    color: '#000'
+    position: 'absolute',
+    borderRadius: 50,
+    top: 220,
+    height: 320,
+    width: 340,
+    backgroundColor: '#fff'
+  },
+  timePicker: {
+    position: 'absolute',
+    borderRadius: 50,
+    left: '-120%',
+    top: 220,
+    height: 320,
+    width: 340,
+    backgroundColor: '#fff',
+    flex: 1,
+    alignItems: 'center'
+  },
+  button: {
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  datePickerButton: {
+    paddingHorizontal: 20
   },
   select: {
     borderBottomColor: '#f0f0f0',
@@ -461,9 +515,24 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-
+    backgroundColor: '#fff',
+    position: 'absolute',
+    width: '100%',
+    height: 400,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: -20,
+    // transform: [{ translateY: -50 }],
+    shadowColor: '#000',
+    shadowOffset: 2,
+    shadowRadius: 3,
+    paddingBottom: 30,
+    borderWidth: 1,
+    borderColor: '#2A86FF',
+    borderRadius: 50
+  },
+  clickable: {
+    cursor: 'pointer',
   },
 });
 

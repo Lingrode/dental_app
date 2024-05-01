@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, SafeAreaView, Pressable, Platform } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, Modal, Pressable, Platform, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { CommonActions } from '@react-navigation/native'
 import styled from 'styled-components';
 
 import { Select, Box, CheckIcon, Center, NativeBaseProvider } from "native-base";
+import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -11,7 +12,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { appointmentsApi } from "../utils/api";
 
 import { Button, Input } from "../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
 // import { Input } from "../components";
 
 
@@ -126,7 +126,6 @@ function AddAppointmentScreen({ route, navigation }) {
     }
   };
 
-
   const confirmIOSDate = () => {
     setDateOfAppointment(formatDate(currentDate));
     toggleDatepicker();
@@ -170,6 +169,16 @@ function AddAppointmentScreen({ route, navigation }) {
   //   showMode('time');
   // };
 
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
 
   return (
     <ScrollView style={styles.container}>
@@ -182,7 +191,7 @@ function AddAppointmentScreen({ route, navigation }) {
           keyboardType='numeric'
         />
 
-        <NativeBaseProvider>
+        {/* <NativeBaseProvider>
           <Center flex={1} style={{ marginBottom: 20 }}>
 
             <Box width='100%'>
@@ -213,7 +222,76 @@ function AddAppointmentScreen({ route, navigation }) {
             </Box>
 
           </Center>
-        </NativeBaseProvider>
+        </NativeBaseProvider> */}
+
+        {
+          Platform.OS === 'ios' ? (
+            <>
+              {/* <Text>Діагноз</Text> */}
+              <TouchableOpacity onPress={handleOpenModal} style={styles.input}>
+                <Text style={styles.inputText}>{values.diagnosis}</Text>
+              </TouchableOpacity>
+
+              {/* <TouchableWithoutFeedback onPress={handleCloseModal}> */}
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCloseModal}
+              // style={{ zIndex: 999 }}
+              >
+                <View style={styles.modalView}>
+                  {/* <TouchableOpacity onPress={handleCloseModal} activeOpacity={1}> */}
+                  <View>
+                    <Picker
+                      // selectedValue={selectedValue}
+                      onValueChange={(itemValue, itemIndex) => {
+                        setSelectedValue(itemValue);
+                        setFieldValue('diagnosis', itemValue);
+                      }}
+                      style={{ width: 350 }}
+                    >
+                      <Picker.Item label="Пульпіт" value="Пульпіт" />
+                      <Picker.Item label="Періодонтит" value="Періодонтит" />
+                      <Picker.Item label="Пародонтит" value="Пародонтит" />
+                      <Picker.Item label="Періостит" value="Періостит" />
+                      <Picker.Item label="Флюороз" value="Флюороз" />
+                    </Picker>
+                    <View style={{ marginTop: 20, }}>
+                      <Button onPress={handleCloseModal} color='#2A86FF'>
+                        <Ionicons name="checkmark-sharp" size={24} color="white" />
+                        Зберегти
+                      </Button>
+                    </View>
+                  </View>
+                  {/* </TouchableOpacity> */}
+                </View>
+              </Modal>
+              {/* </TouchableWithoutFeedback> */}
+            </>
+          ) :
+            (
+              <TouchableWithoutFeedback onPress={handleCloseModal}>
+                <View style={styles.select}>
+                  <Picker
+                    // selectedValue={selectedValue}
+                    onValueChange={(itemValue, itemIndex) => {
+                      setSelectedValue(itemValue);
+                      setFieldValue('diagnosis', itemValue);
+                    }}
+                    mode="dropdown"
+                    itemStyle='color: "#f0f0f0"'
+                    style={{ borderRadius: 10 }}
+                  >
+                    <Picker.Item label="Пульпіт" value="Пульпіт" style={styles.selectValues} />
+                    <Picker.Item label="Періодонтит" value="Періодонтит" style={styles.selectValues} />
+                    <Picker.Item label="Пародонтит" value="Пародонтит" style={styles.selectValues} />
+                    <Picker.Item label="Періостит" value="Періостит" style={styles.selectValues} />
+                    <Picker.Item label="Флюороз" value="Флюороз" style={styles.selectValues} />
+                  </Picker>
+                </View>
+              </TouchableWithoutFeedback>
+            )}
 
         <Input
           name='phoneNumber'
@@ -385,12 +463,32 @@ const LabelDate = styled.Text`
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    margin: 12,
+    marginTop: 6,
+    marginBottom: 12,
+    marginLeft: 0,
+    marginRight: 0,
     borderBottomWidth: 1,
     padding: 10,
-    borderColor: 'gray',
+    borderColor: '#F0F0F0',
     borderRadius: 5,
-    fontSize: 18
+  },
+  select: {
+    borderBottomColor: '#f0f0f0',
+    borderBottomWidth: 1,
+    marginBottom: 20,
+    marginLeft: -5,
+    marginRight: -5,
+  },
+  selectValues: {
+    ...Platform.select({
+      ios: {
+        fontSize: 16
+      },
+      android: {
+        fontSize: 20,
+        borderBottomWidth: 1
+      }
+    })
   },
   container: {
     backgroundColor: '#fff',
