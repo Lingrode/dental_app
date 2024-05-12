@@ -118,10 +118,13 @@ function PatientScreen({ route, navigation }) {
         </PatientButtons>
       </PatientDetails>
 
+      <Container>
+        <Text style={styles.appointmentsTitle}>Прийоми</Text>
+      </Container>
+
       <PatientAppointments>
         <Container>
 
-          <Text style={styles.appointmentsTitle}>Прийоми</Text>
 
           <GestureHandlerRootView>
 
@@ -269,6 +272,7 @@ const styles = StyleSheet.create({
   appointmentsTitle: {
     fontFamily: 'SFUIText-Bold',
     marginBottom: 20,
+    marginTop: 35,
     ...Platform.select({
       ios: {
         fontSize: 20,
@@ -324,6 +328,7 @@ const AppointmentCard = styled.View`
 const Container = styled.View`
   background-color: #F8FAFD;
   border-radius: 10px;
+  padding: 0 25px;
 `
 
 const PatientDetails = styled.View`
@@ -332,10 +337,8 @@ const PatientDetails = styled.View`
   padding: 25px;
 `;
 
-const PatientAppointments = styled.View`
+const PatientAppointments = styled.ScrollView`
   background-color: #F8FAFD;
-  padding: 0 25px;
-  margin-top: 35px;
 `;
 
 const FormulaButtonView = styled.View`

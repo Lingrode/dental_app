@@ -1,13 +1,19 @@
-import { View, Text, Animated, StyleSheet, Platform } from 'react-native';
-import { useRef } from 'react';
-import styled from 'styled-components/native';
+import { View, Text, Animated, StyleSheet, Platform } from "react-native";
+import { useRef } from "react";
+import styled from "styled-components/native";
 
 import GrayText from "./GrayText";
 import Badge from "./Badge";
 
 import getAvatarColor from "../utils/getAvatarColor";
 
-function Appointment({ onPress, item, active }) {
+function Appointment({
+  onPress,
+  item,
+  active,
+  groupTitle = "Untitled",
+  items = [],
+}) {
   const { patient, diagnosis, time } = item;
   const avatarColors = getAvatarColor(patient.fullname[0].toUpperCase());
 
@@ -30,7 +36,7 @@ function Appointment({ onPress, item, active }) {
   };
 
   return (
-    <View style={{ backgroundColor: '#fff' }}>
+    <View style={{ backgroundColor: "#fff" }}>
       <AnimatedTouchableOpacity
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -39,11 +45,16 @@ function Appointment({ onPress, item, active }) {
         activeOpacity={1}
       >
         <View
-          style={[styles.avatar, {
-            backgroundColor: avatarColors.background,
-          }]}
+          style={[
+            styles.avatar,
+            {
+              backgroundColor: avatarColors.background,
+            },
+          ]}
         >
-          <Text style={[styles.letter, { color: avatarColors.color }]}>{patient.fullname[0].toUpperCase()}</Text>
+          <Text style={[styles.letter, { color: avatarColors.color }]}>
+            {patient.fullname[0].toUpperCase()}
+          </Text>
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.fullname}>{patient.fullname}</Text>
@@ -53,18 +64,16 @@ function Appointment({ onPress, item, active }) {
       </AnimatedTouchableOpacity>
     </View>
   );
-};
-
-
-
-Appointment.defaultProps = {
-  groupTitle: 'Untitled',
-  items: []
 }
+
+// Appointment.defaultProps = {
+//   groupTitle: "Untitled",
+//   items: [],
+// };
 
 const styles = StyleSheet.create({
   letter: {
-    fontFamily: 'SFUIText-Bold',
+    fontFamily: "SFUIText-Bold",
     ...Platform.select({
       ios: {
         fontSize: 18,
@@ -73,24 +82,24 @@ const styles = StyleSheet.create({
       android: {
         fontSize: 22,
         lineHeight: 26,
-      }
-    })
+      },
+    }),
   },
   fullname: {
-    fontFamily: 'SFUIText-Bold',
+    fontFamily: "SFUIText-Bold",
     ...Platform.select({
       ios: {
         fontSize: 14,
-        marginBottom: 3
+        marginBottom: 3,
       },
       android: {
-        fontSize: 18
-      }
-    })
+        fontSize: 18,
+      },
+    }),
   },
   avatar: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 50,
     marginRight: 16,
     ...Platform.select({
@@ -101,27 +110,20 @@ const styles = StyleSheet.create({
       android: {
         width: 50,
         height: 50,
-      }
-    })
-  }
-})
+      },
+    }),
+  },
+});
 
-// const Avatar = styled.View`
-//   align-items: center;
-//   justify-content: center;
-//   border-radius: 50px;
-//   width: 50px;
-//   height: 50px;
-//   margin-right: 16px;
-// `;
-
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(styled.TouchableOpacity`
-  align-items: center;
-  flex-direction: row;
-  padding: 20px 25px;
-  border-bottom-width: 1px;
-  border-bottom-color: #F3F3F3;
-  background-color: #fff;
-`);
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(styled.TouchableOpacity`
+    align-items: center;
+    flex-direction: row;
+    padding: 20px 25px;
+    border-bottom-width: 1px;
+    border-bottom-color: #f3f3f3;
+    background-color: #fff;
+    width: 100%;
+  `);
 
 export default Appointment;

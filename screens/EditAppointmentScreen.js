@@ -185,7 +185,7 @@ function EditAppointmentScreen({ route, navigation }) {
           name='toothNumber'
           placeholder={'Номер зуба'}
           onChange={handleInputChange.bind(this, 'toothNumber')}
-          value={appointment.toothNumber.toString()}
+          value={values.toothNumber.toString()}
           defaultValue={appointment.toothNumber}
           keyboardType='numeric'
         />
