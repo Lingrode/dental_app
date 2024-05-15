@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import {
   TouchableOpacity,
   Alert,
@@ -11,20 +11,14 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import _ from "lodash";
-// import axios, * as others from 'axios';
-// import axios from "../core/axios";
 import { ListItem } from "@rneui/themed";
 import moment from "moment";
 
-import {
-  Appointment,
-  SectionTitle,
-  PlusButton,
-} from "../components";
+import { Appointment, SectionTitle, PlusButton } from "../components";
 import { appointmentsApi } from "../utils/api";
 
 function HomeScreen({ navigation, route }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       header: () => (
         <View style={styles.header}>
@@ -48,11 +42,11 @@ function HomeScreen({ navigation, route }) {
     });
   }, [navigation]);
 
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [nearestAppointment, setNearestAppointment] = useState(null);
+  const [data, setData] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [nearestAppointment, setNearestAppointment] = React.useState(null);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = React.useRef(new Animated.Value(0)).current;
   const translateY = scrollY.interpolate({
     inputRange: [0, 100],
     outputRange: [0, 100],
@@ -80,15 +74,45 @@ function HomeScreen({ navigation, route }) {
         setNearestAppointment(appointments[0].data[0]);
 
         setData(appointments);
+        console.log(appointments);
       })
       .finally((e) => {
         setIsLoading(false);
       });
   };
 
-  useEffect(fetchAppointments, []);
+  React.useEffect(fetchAppointments, []);
 
-  useEffect(fetchAppointments, [route.params]);
+  React.useEffect(fetchAppointments, [route.params]);
+
+  // const removeAppointment = (id) => {
+  //   Alert.alert(
+  //     "Видалення прийому",
+  //     "Ви дійсно хочете видалити прийом?",
+  //     [
+  //       {
+  //         text: "Відміна",
+  //         onPress: () => console.log("Cancel Pressed"),
+  //         style: "cancel",
+  //       },
+  //       {
+  //         text: "Видалити",
+  //         onPress: () => {
+  //           setIsLoading(true);
+  //           appointmentsApi
+  //             .remove(id)
+  //             .then(() => {
+  //               fetchAppointments();
+  //             })
+  //             .catch(() => {
+  //               setIsLoading(false);
+  //             });
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
   const removeAppointment = (id) => {
     Alert.alert(
@@ -107,9 +131,17 @@ function HomeScreen({ navigation, route }) {
             appointmentsApi
               .remove(id)
               .then(() => {
-                fetchAppointments();
+                const newData = data
+                  .map((section) => ({
+                    ...section,
+                    data: section.data.filter((item) => item._id !== id),
+                  }))
+                  .filter((section) => section.data.length > 0);
+                setData(newData);
+                setIsLoading(false);
               })
               .catch(() => {
+                setData(data);
                 setIsLoading(false);
               });
           },
@@ -121,7 +153,7 @@ function HomeScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {data && (
+      {data && data.length > 0 ? (
         <Animated.SectionList
           sections={data}
           keyExtractor={(item) => item._id}
@@ -196,8 +228,12 @@ function HomeScreen({ navigation, route }) {
             { useNativeDriver: true }
           )}
         />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Прийоми відсутні</Text>
+        </View>
       )}
-      <Animated.View style={{ transform: [{ translateY }] }}>
+      <Animated.View style={{ transform: [{ translateY }], bottom: 0 }}>
         <PlusButton onPress={() => navigation.navigate("AddPatient")} />
       </Animated.View>
     </View>
@@ -250,10 +286,21 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
     flex: 1,
     backgroundColor: "#fff",
-    position: "relative",
-    height: "10px",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 24,
+    color: "#2A86FF",
+    fontFamily: "SFUIText-Bold",
   },
 });
 

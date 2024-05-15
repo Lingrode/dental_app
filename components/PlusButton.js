@@ -1,37 +1,43 @@
 import React from "react";
-import styled from "styled-components/native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const PlusButton = ({ onPress, ref }) => (
-  <Circle onPress={onPress}
-    style={{
-      shadowColor: "#2A86FF",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.7,
-      shadowRadius: 2.5,
+  <TouchableOpacity
+    onPress={onPress}
+    style={[
+      styles.circle,
+      {
+        shadowColor: "#2A86FF",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.7,
+        shadowRadius: 2.5,
 
-      elevation: 5,
-    }}
+        elevation: 5,
+      },
+    ]}
   >
     <MaterialCommunityIcons name="plus" size={32} color="white" />
-  </Circle>
+  </TouchableOpacity>
 );
 
-const Circle = styled.TouchableOpacity`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 50px;
-  width: 65px;
-  height: 65px;
-  background-color: #2A86FF;
-  position: absolute;
-  right: 25px;
-  bottom: 25px;
-`;
+const styles = StyleSheet.create({
+  circle: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    borderRadius: 50,
+    width: 65,
+    height: 65,
+    backgroundColor: "#2a86ff",
+    position: "absolute",
+    right: 25,
+    bottom: 25
+  },
+});
 
 export default PlusButton;

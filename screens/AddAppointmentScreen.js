@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import { appointmentsApi } from "../utils/api";
 import { Button, Input } from "../components";
 
 function AddAppointmentScreen({ route, navigation }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       title: "Додати прийом",
       headerTintColor: "#2A86FF",
@@ -40,7 +40,15 @@ function AddAppointmentScreen({ route, navigation }) {
     });
   }, [navigation]);
 
-  const [values, setValues] = useState({
+  const fieldsName = {
+    toothNumber: "Номер зуба",
+    price: "Ціна",
+    diagnosis: "Діагноз",
+    date: "Дата",
+    time: "Час",
+  };
+
+  const [values, setValues] = React.useState({
     diagnosis: "Пульпіт",
     toothNumber: "",
     price: "",
@@ -49,13 +57,11 @@ function AddAppointmentScreen({ route, navigation }) {
     patient: route.params.patientId,
   });
 
-  const fieldsName = {
-    toothNumber: "Номер зуба",
-    price: "Ціна",
-    diagnosis: "Діагноз",
-    date: "Дата",
-    time: "Час",
-  };
+  const [date, setDate] = React.useState(new Date());
+  const [showDatepicker, setShowDatepicker] = React.useState(false);
+  const [showTimepicker, setShowTimepicker] = React.useState(false);
+  const [dateOfAppointment, setDateOfAppointment] = React.useState("");
+  const [timeOfAppointment, setTimeOfAppointment] = React.useState("");
 
   const setFieldValue = (name, value) => {
     setValues({
@@ -73,7 +79,7 @@ function AddAppointmentScreen({ route, navigation }) {
     appointmentsApi
       .add(values)
       .then(() => {
-        navigation.navigate("Home", { lastUpdate: new Date() });
+        navigation.navigate("Home", { lastUpdate: new Date().toISOString() });
       })
       .catch((e) => {
         if (e.response && e.response.data) {
@@ -86,12 +92,6 @@ function AddAppointmentScreen({ route, navigation }) {
         }
       });
   };
-
-  const [date, setDate] = useState(new Date());
-  const [showDatepicker, setShowDatepicker] = useState(false);
-  const [showTimepicker, setShowTimepicker] = useState(false);
-  const [dateOfAppointment, setDateOfAppointment] = useState("");
-  const [timeOfAppointment, setTimeOfAppointment] = useState("");
 
   const toggleDatepicker = () => {
     setShowDatepicker(!showDatepicker);
@@ -170,7 +170,7 @@ function AddAppointmentScreen({ route, navigation }) {
   //   showMode('time');
   // };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -180,9 +180,9 @@ function AddAppointmentScreen({ route, navigation }) {
     setModalVisible(false);
   };
 
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = React.useState("");
 
-  useEffect(() => {
+  React.useEffect(() => {
     setSelectedValue(values.diagnosis);
   }, [values.diagnosis]);
 

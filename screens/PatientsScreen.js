@@ -11,8 +11,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import axios from 'axios;'
-// import axios, * as others from 'axios';
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import { Appointment, PlusButton } from "../components";
