@@ -14,4 +14,4 @@
 - react-native-popup-menu
 - @react-native-community/datetimepicker
 
-#### Server side of the application is [here](https://github.com/Lingrode/dental_backend)
+#### Server side of the application is [here](https://github.com/Lingrode/diplomaProjectBackend)
