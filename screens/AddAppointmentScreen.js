@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import styled from "styled-components";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
@@ -157,19 +156,6 @@ function AddAppointmentScreen({ route, navigation }) {
     return `${hours}:${minutes}`;
   };
 
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-
-  // const showDatepicker = () => {
-  //   showMode('date');
-  // };
-
-  // const showTimepicker = () => {
-  //   showMode('time');
-  // };
-
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const handleOpenModal = () => {
@@ -196,57 +182,19 @@ function AddAppointmentScreen({ route, navigation }) {
           value={values.toothNumber}
           keyboardType="numeric"
         />
-
-        {/* <NativeBaseProvider>
-          <Center flex={1} style={{ marginBottom: 20 }}>
-
-            <Box width='100%'>
-              <Select
-                style={{}}
-                maxWidth='360px'
-                accessibilityLabel="Choose Service"
-                placeholder="Оберіть діагноз"
-                minWidth='container'
-                borderColor='#F0F0F0'
-                placeholderTextColor='#A0A2A4'
-                fontSize='20px'
-                borderLeftWidth='0'
-                borderTopWidth='0'
-                borderRightWidth='0'
-                _selectedItem={{
-                  bg: 'amber.100',
-                }}
-                mt={5}
-                defaultValue={values.diagnosis}
-                onValueChange={setFieldValue.bind(this, 'diagnosis')}>
-                <Select.Item label="Пульпіт" value="Пульпіт" />
-                <Select.Item label="Періодонтит" value="Періодонтит" />
-                <Select.Item label="Пародонтит" value="Пародонтит" />
-                <Select.Item label="Періостит" value="Періостит" />
-                <Select.Item label="Флюороз" value="Флюороз" />
-              </Select>
-            </Box>
-
-          </Center>
-        </NativeBaseProvider> */}
-
         {Platform.OS === "ios" ? (
           <>
-            {/* <Text>Діагноз</Text> */}
             <TouchableOpacity onPress={handleOpenModal} style={styles.input}>
               <Text style={styles.inputText}>{values.diagnosis}</Text>
             </TouchableOpacity>
 
-            {/* <TouchableWithoutFeedback onPress={handleCloseModal}> */}
             <Modal
               animationType="slide"
               transparent={true}
               visible={modalVisible}
               onRequestClose={handleCloseModal}
-              // style={{ zIndex: 999 }}
             >
               <View style={styles.modalView}>
-                {/* <TouchableOpacity onPress={handleCloseModal} activeOpacity={1}> */}
                 <View>
                   <Picker
                     selectedValue={selectedValue}
@@ -273,10 +221,8 @@ function AddAppointmentScreen({ route, navigation }) {
                     </Button>
                   </View>
                 </View>
-                {/* </TouchableOpacity> */}
               </View>
             </Modal>
-            {/* </TouchableWithoutFeedback> */}
           </>
         ) : (
           <TouchableWithoutFeedback onPress={handleCloseModal}>
@@ -332,8 +278,8 @@ function AddAppointmentScreen({ route, navigation }) {
         <View
           style={{ display: "flex", flexDirection: "row", marginBottom: 30 }}
         >
-          <DateView>
-            <LabelDate>Дата</LabelDate>
+          <View style={[styles.dateTimeView, { marginRight: 30 }]}>
+            <Text style={styles.dateTimeLabel}>Дата</Text>
 
             {showDatepicker && (
               <DateTimePicker
@@ -372,10 +318,10 @@ function AddAppointmentScreen({ route, navigation }) {
                 />
               </Pressable>
             )}
-          </DateView>
+          </View>
 
-          <TimeView>
-            <LabelDate>Час</LabelDate>
+          <View style={styles.dateTimeView}>
+            <Text style={styles.dateTimeLabel}>Час</Text>
 
             {showTimepicker && (
               <DateTimePicker
@@ -412,46 +358,8 @@ function AddAppointmentScreen({ route, navigation }) {
                 />
               </Pressable>
             )}
-          </TimeView>
+          </View>
         </View>
-
-        {/* <SafeAreaView style={{ flexDirection: 'row' }}>
-          <ButtonView style={{ marginRight: 20 }}>
-            <DatePickerButton
-              onPress={showDatepicker}
-              title="Оберіть дату"
-              style={{ height: 50 }}
-              open={false}
-            />
-            {show && mode === 'date' && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date()}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-
-              />
-            )}
-          </ButtonView>
-          <ButtonView>
-            <TimePickerButton
-              onPress={showTimepicker}
-              title="Час" />
-            {show && mode === 'time' && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date()}
-                mode={mode}
-                is24Hour={true}
-                display='default'
-                onChange={onChange}
-              />
-            )}
-          </ButtonView>
-          <Text>selected: {date.toLocaleString()}</Text>
-        </SafeAreaView> */}
       </View>
       <View style={{ marginTop: 20 }}>
         <Button onPress={onSubmit} color="#87CC6F">
@@ -462,31 +370,6 @@ function AddAppointmentScreen({ route, navigation }) {
     </ScrollView>
   );
 }
-
-const ButtonView = styled.View`
-  flex: 1;
-`;
-
-const TimeView = styled.View`
-  border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
-  width: 50%;
-  padding-left: 10px;
-`;
-
-const DateView = styled.View`
-  border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
-  width: 50%;
-  margin-right: 30px;
-  padding-left: 10px;
-`;
-
-const LabelDate = styled.Text`
-  font-size: 16px;
-  color: #a0a2a4;
-  margin-bottom: 5px;
-`;
 
 const styles = StyleSheet.create({
   input: {
@@ -529,6 +412,17 @@ const styles = StyleSheet.create({
     marginTop: -10,
     fontSize: 18,
     color: "#000",
+  },
+  dateTimeView: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+    width: "50%",
+    paddingLeft: 10,
+  },
+  dateTimeLabel: {
+    fontSize: 16,
+    color: "#a0a2a4",
+    marginBottom: 5,
   },
 });
 

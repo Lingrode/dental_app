@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, StyleSheet, ScrollView, Platform } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import { patientsApi } from "../utils/api";
 import { Button, Input } from "../components";
 
 function EditPatientScreen({ route, navigation }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       title: "Змінити пацієнта",
       headerTintColor: "#2A86FF",
@@ -33,12 +33,12 @@ function EditPatientScreen({ route, navigation }) {
   }, [navigation]);
 
   const { patient } = route.params;
-  const [values, setValues] = useState(patient);
-  const [isEdited, setIsEdited] = useState(patient);
+  const [values, setValues] = React.useState(patient);
+  const [isEdited, setIsEdited] = React.useState(patient);
 
   const patientId = route.params.patientId;
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (patientId && !isEdited) {
       patientsApi.show(patientId).then((response) => {
         const patientData = response.data;

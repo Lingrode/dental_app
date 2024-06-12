@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import {
   Alert,
   TextInput,
@@ -17,7 +17,7 @@ import { Appointment, PlusButton } from "../components";
 import { phoneFormat, patientsApi } from "../utils";
 
 function PatientsScreen({ navigation, route }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       title: "Пацієнти",
       headerTintColor: "#2A86FF",
@@ -43,21 +43,21 @@ function PatientsScreen({ navigation, route }) {
     });
   }, [navigation]);
 
-  const [data, setData] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isButtonVisible, setIsButtonVisible] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [patientData, setPatientData] = useState(null);
+  const [data, setData] = React.useState(null);
+  const [searchValue, setSearchValue] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isButtonVisible, setIsButtonVisible] = React.useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [patientData, setPatientData] = React.useState(null);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     fetchPatients().then(() => setRefreshing(false));
   }, []);
 
-  const swipeListViewRef = useRef(null);
+  const swipeListViewRef = React.useRef(null);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const buttonOpacity = scrollY.interpolate({
     inputRange: [0, 50],
@@ -65,7 +65,7 @@ function PatientsScreen({ navigation, route }) {
     extrapolate: "clamp",
   });
 
-  const inputRef = useRef();
+  const inputRef = React.useRef();
 
   const fetchPatients = async () => {
     setIsLoading(true);
@@ -82,11 +82,11 @@ function PatientsScreen({ navigation, route }) {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchPatients();
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", fetchPatients);
 
     return unsubscribe;
@@ -117,7 +117,7 @@ function PatientsScreen({ navigation, route }) {
   //   setPatientData(newData);
   // };
 
-  useEffect(() => {
+  React.useEffect(() => {
     Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
     return () => {
       Keyboard.removeAllListeners("keyboardDidHide", _keyboardDidHide);

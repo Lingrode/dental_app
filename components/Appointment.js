@@ -1,6 +1,12 @@
-import { View, Text, Animated, StyleSheet, Platform } from "react-native";
-import { useRef } from "react";
-import styled from "styled-components/native";
+import {
+  View,
+  Text,
+  Animated,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
+import React from "react";
 
 import GrayText from "./GrayText";
 import Badge from "./Badge";
@@ -17,7 +23,7 @@ function Appointment({
   const { patient, diagnosis, time } = item;
   const avatarColors = getAvatarColor(patient.fullname[0].toUpperCase());
 
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
     Animated.timing(fadeAnim, {
@@ -41,7 +47,7 @@ function Appointment({
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        style={{ opacity: fadeAnim }}
+        style={[styles.button, { opacity: fadeAnim }]}
         activeOpacity={1}
       >
         <View
@@ -65,11 +71,6 @@ function Appointment({
     </View>
   );
 }
-
-// Appointment.defaultProps = {
-//   groupTitle: "Untitled",
-//   items: [],
-// };
 
 const styles = StyleSheet.create({
   letter: {
@@ -113,17 +114,21 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  button: {
+    alignItems: "center",
+    flexDirection: "row",
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingRight: 25,
+    paddingLeft: 25,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f3f3f3",
+    backgroundColor: "#fff",
+    width: "100%",
+  },
 });
 
 const AnimatedTouchableOpacity =
-  Animated.createAnimatedComponent(styled.TouchableOpacity`
-    align-items: center;
-    flex-direction: row;
-    padding: 20px 25px;
-    border-bottom-width: 1px;
-    border-bottom-color: #f3f3f3;
-    background-color: #fff;
-    width: 100%;
-  `);
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 export default Appointment;

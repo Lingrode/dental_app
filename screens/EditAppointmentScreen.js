@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import styled from "styled-components";
 
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -23,7 +22,7 @@ import { appointmentsApi } from "../utils/api";
 import { Button, Input } from "../components";
 
 function EditAppointmentScreen({ route, navigation }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       title: "Редагувати прийом",
       headerTintColor: "#2A86FF",
@@ -49,11 +48,11 @@ function EditAppointmentScreen({ route, navigation }) {
 
   const { appointment } = route.params;
 
-  const [selectedValue, setSelectedValue] = useState(
+  const [selectedValue, setSelectedValue] = React.useState(
     appointment.diagnosis || "Пульпіт"
   );
 
-  const [values, setValues] = useState({
+  const [values, setValues] = React.useState({
     diagnosis: appointment.diagnosis || "Пульпіт",
     toothNumber: appointment.toothNumber,
     price: appointment.price,
@@ -100,10 +99,10 @@ function EditAppointmentScreen({ route, navigation }) {
       });
   };
 
-  const [showDatepicker, setShowDatepicker] = useState(false);
-  const [showTimepicker, setShowTimepicker] = useState(false);
-  const [date, setDate] = useState(new Date(appointment.date));
-  const [time, setTime] = useState(new Date());
+  const [showDatepicker, setShowDatepicker] = React.useState(false);
+  const [showTimepicker, setShowTimepicker] = React.useState(false);
+  const [date, setDate] = React.useState(new Date(appointment.date));
+  const [time, setTime] = React.useState(new Date());
 
   React.useEffect(() => {
     const newDate = new Date(appointment.date);
@@ -179,7 +178,7 @@ function EditAppointmentScreen({ route, navigation }) {
     return `${hours}:${minutes}`;
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -203,21 +202,17 @@ function EditAppointmentScreen({ route, navigation }) {
 
         {Platform.OS === "ios" ? (
           <>
-            {/* <Text>Діагноз</Text> */}
             <TouchableOpacity onPress={handleOpenModal} style={styles.input}>
               <Text style={styles.inputText}>{selectedValue}</Text>
             </TouchableOpacity>
 
-            {/* <TouchableWithoutFeedback onPress={handleCloseModal}> */}
             <Modal
               animationType="slide"
               transparent={true}
               visible={modalVisible}
               onRequestClose={handleCloseModal}
-              // style={{ zIndex: 999 }}
             >
               <View style={styles.modalView}>
-                {/* <TouchableOpacity onPress={handleCloseModal} activeOpacity={1}> */}
                 <View>
                   <Picker
                     selectedValue={selectedValue}
@@ -244,10 +239,8 @@ function EditAppointmentScreen({ route, navigation }) {
                     </Button>
                   </View>
                 </View>
-                {/* </TouchableOpacity> */}
               </View>
             </Modal>
-            {/* </TouchableWithoutFeedback> */}
           </>
         ) : (
           <TouchableWithoutFeedback onPress={handleCloseModal}>
@@ -304,8 +297,8 @@ function EditAppointmentScreen({ route, navigation }) {
         <View
           style={{ display: "flex", flexDirection: "row", marginBottom: 30 }}
         >
-          <DateView>
-            <LabelDate>Дата</LabelDate>
+          <View style={[styles.dateTimeView, { marginRight: 30 }]}>
+            <Text style={styles.dateTimeLabel}>Дата</Text>
 
             <View style={styles.datePicker}>
               {showDatepicker && (
@@ -374,10 +367,10 @@ function EditAppointmentScreen({ route, navigation }) {
                 />
               </Pressable>
             )}
-          </DateView>
+          </View>
 
-          <TimeView>
-            <LabelDate>Час</LabelDate>
+          <View style={styles.dateTimeView}>
+            <Text style={styles.dateTimeLabel}>Час</Text>
 
             <View style={styles.timePicker}>
               {showTimepicker && (
@@ -445,7 +438,7 @@ function EditAppointmentScreen({ route, navigation }) {
                 />
               </Pressable>
             )}
-          </TimeView>
+          </View>
         </View>
       </View>
       <View style={{ marginTop: 20 }}>
@@ -457,27 +450,6 @@ function EditAppointmentScreen({ route, navigation }) {
     </ScrollView>
   );
 }
-
-const TimeView = styled.View`
-  border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
-  width: 50%;
-  padding-left: 10px;
-`;
-
-const DateView = styled.View`
-  border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
-  width: 50%;
-  margin-right: 30px;
-  padding-left: 10px;
-`;
-
-const LabelDate = styled.Text`
-  font-size: 16px;
-  color: #a0a2a4;
-  margin-bottom: 5px;
-`;
 
 const styles = StyleSheet.create({
   input: {
@@ -562,7 +534,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     bottom: -20,
-    // transform: [{ translateY: -50 }],
     shadowColor: "#000",
     shadowOffset: 2,
     shadowRadius: 3,
@@ -573,6 +544,17 @@ const styles = StyleSheet.create({
   },
   clickable: {
     cursor: "pointer",
+  },
+  dateTimeView: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+    width: "50%",
+    paddingLeft: 10,
+  },
+  dateTimeLabel: {
+    fontSize: 16,
+    color: "#a0a2a4",
+    marginBottom: 5,
   },
 });
 

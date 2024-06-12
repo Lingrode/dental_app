@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, StyleSheet, ScrollView, Platform } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -7,10 +7,8 @@ import { patientsApi } from "../utils/api";
 
 import { Button, Input } from "../components";
 
-import { formatPhoneNumber } from "../utils/phoneFormat";
-
 function AddPatientScreen({ route, navigation }) {
-  useEffect(() => {
+  React.useEffect(() => {
     navigation.setOptions({
       title: "Додати пацієнта",
       headerTintColor: "#2A86FF",
@@ -34,7 +32,7 @@ function AddPatientScreen({ route, navigation }) {
     });
   }, [navigation]);
 
-  const [values, setValues] = useState({});
+  const [values, setValues] = React.useState({});
 
   const handleChange = (name, e) => {
     const text = e.nativeEvent.text;

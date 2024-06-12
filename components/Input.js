@@ -1,23 +1,36 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Animated, Platform, StyleSheet, TextInput, View } from 'react-native';
-import { GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import React from "react";
+import { Animated, Platform, StyleSheet, TextInput, View } from "react-native";
+import {
+  GestureHandlerRootView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 
-const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue, name, ...props }) => {
+const Input = ({
+  containerStyle,
+  placeholder,
+  onChangeText,
+  error,
+  defaultValue,
+  name,
+  ...props
+}) => {
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const [values, setValues] = React.useState({});
+  const labelPosition = React.useRef(
+    new Animated.Value(values[name] ? 1 : 0)
+  ).current;
+  const borderColor = React.useRef(
+    new Animated.Value(isFocused ? 1 : 0)
+  ).current;
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [text, setText] = useState('');
-  const [values, setValues] = useState({});
-  const labelPosition = useRef(new Animated.Value(values[name] ? 1 : 0)).current;
-  const borderColor = useRef(new Animated.Value(isFocused ? 1 : 0)).current;
+  const inputRef = React.useRef();
 
-  const inputRef = useRef();
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (defaultValue) {
       animatedLabel(1);
     }
   }, []);
-
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -35,7 +48,7 @@ const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue,
 
   const handleTextChange = (text) => {
     setText(text);
-    setValues(prevValues => ({
+    setValues((prevValues) => ({
       ...prevValues,
       [name]: text,
     }));
@@ -49,10 +62,9 @@ const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue,
     }
   };
 
-
   const dismissKeyboard = () => {
     inputRef.current.blur();
-  }
+  };
 
   const animatedLabel = (toValue) => {
     Animated.timing(labelPosition, {
@@ -85,15 +97,14 @@ const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue,
     }),
     color: labelPosition.interpolate({
       inputRange: [0, 1],
-      outputRange: ['#A0A2A4', '#A0A2A4'],
+      outputRange: ["#A0A2A4", "#A0A2A4"],
     }),
   };
 
   const borderBottomColor = borderColor.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#F0F0F0', '#2A86FF'],
+    outputRange: ["#F0F0F0", "#2A86FF"],
   });
-
 
   return (
     <GestureHandlerRootView>
@@ -108,7 +119,7 @@ const Input = ({ containerStyle, placeholder, onChangeText, error, defaultValue,
               onFocus={handleFocus}
               onBlur={handleBlur}
               onChangeText={handleTextChange}
-              selectionColor={'rgba(42, 134, 255, 0.58)'}
+              selectionColor={"rgba(42, 134, 255, 0.58)"}
               defaultValue={defaultValue}
             />
           </Animated.View>
@@ -123,21 +134,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     height: 65,
     width: 360,
-    justifyContent: 'center',
+    justifyContent: "center",
     ...Platform.select({
       ios: {
-        width: 'auto'
-      }
-    })
+        width: "auto",
+      },
+    }),
   },
   label: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
-    color: 'gray',
+    color: "gray",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingRight: 10,
   },
   input: {
@@ -146,20 +157,20 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: 5,
     paddingLeft: 10,
-    fontFamily: 'SFUIText-Regular',
+    fontFamily: "SFUIText-Regular",
     ...Platform.select({
       ios: {
         fontSize: 16,
       },
       android: {
         fontSize: 20,
-      }
-    })
+      },
+    }),
   },
   errorText: {
     marginTop: 5,
     fontSize: 14,
-    color: 'red',
+    color: "red",
   },
 });
 
