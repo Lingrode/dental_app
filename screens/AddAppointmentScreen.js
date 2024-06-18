@@ -366,7 +366,7 @@ function AddAppointmentScreen({ route, navigation }) {
           text="Додати прийом"
           icon={<Ionicons name="add" size={24} color="white" />}
           onPress={onSubmit}
-          color="#2A86FF"
+          color="#87CC6F"
         ></Button>
       </View>
     </ScrollView>

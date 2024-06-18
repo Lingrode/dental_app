@@ -36,6 +36,11 @@ function EditPatientScreen({ route, navigation }) {
   const [values, setValues] = React.useState(patient);
   const [isEdited, setIsEdited] = React.useState(patient);
 
+  const fieldsName = {
+    fullname: "Ім'я та прізвище",
+    phone: "Номер телефону",
+  };
+
   const patientId = route.params.patientId;
 
   React.useEffect(() => {
@@ -61,8 +66,15 @@ function EditPatientScreen({ route, navigation }) {
       .then(() => {
         navigation.goBack();
       })
-      .catch((error) => {
-        console.error("Failed to update patient:", error);
+      .catch((e) => {
+        if (e.response && e.response.data.message) {
+          console.log(e.response.data.message);
+          e.response.data.message.forEach((err) => {
+            console.log(err.msg);
+            const fieldName = err.path;
+            alert(`Помилка! Поле "${fieldsName[fieldName]}" вказано невірно!`);
+          });
+        }
       });
   };
 
@@ -86,12 +98,14 @@ function EditPatientScreen({ route, navigation }) {
           keyboardType="numeric"
         />
       </View>
-      <Button
-        text="Зберегти"
-        icon={<Ionicons name="checkmark-sharp" size={24} color="white" />}
-        onPress={onSubmit}
-        color="#2A86FF"
-      ></Button>
+      <View style={{ marginTop: 20 }}>
+        <Button
+          text="Зберегти"
+          icon={<Ionicons name="checkmark-sharp" size={24} color="white" />}
+          onPress={onSubmit}
+          color="#2A86FF"
+        ></Button>
+      </View>
     </ScrollView>
   );
 }

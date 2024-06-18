@@ -34,6 +34,11 @@ function AddPatientScreen({ route, navigation }) {
 
   const [values, setValues] = React.useState({});
 
+  const fieldsName = {
+    fullname: "Ім'я та прізвище",
+    phone: "Номер телефону",
+  };
+
   const handleChange = (name, e) => {
     const text = e.nativeEvent.text;
     setValues({
@@ -66,11 +71,18 @@ function AddPatientScreen({ route, navigation }) {
   const onSubmit = () => {
     patientsApi
       .add(values)
-      .then((response) => {
+      .then(() => {
         navigation.navigate("Patients");
       })
-      .catch((error) => {
-        console.error("Failed to add patient:", error);
+      .catch((e) => {
+        if (e.response && e.response.data) {
+          console.log(e.response.data.data);
+          e.response.data.data.forEach((err) => {
+            console.log(err.msg);
+            const fieldName = err.path;
+            alert(`Помилка! Поле "${fieldsName[fieldName]}" вказано невірно!`);
+          });
+        }
       });
   };
 
@@ -86,7 +98,7 @@ function AddPatientScreen({ route, navigation }) {
         <Input
           name="phoneNumber"
           placeholder={"Номер телефону"}
-          onChangeText={handlePhoneChange}
+          // onChangeText={handlePhoneChange}
           // onChange={handleChange.bind(this, 'phone')}
           value={values.phone}
           dataDetectorTypes="phoneNumber"
@@ -98,7 +110,7 @@ function AddPatientScreen({ route, navigation }) {
           text="Додати пацієнта"
           icon={<Ionicons name="add" size={24} color="white" />}
           onPress={onSubmit}
-          color="#2A86FF"
+          color="#87CC6F"
         ></Button>
       </View>
     </ScrollView>
