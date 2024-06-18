@@ -77,6 +77,12 @@ function TeethChartScreen({ navigation, route }) {
               styles.toothNumber,
               tooth.position,
               { color: teeth && teeth[tooth.id] ? "green" : "black" },
+              {
+                fontFamily:
+                  teeth && teeth[tooth.id]
+                    ? "SFUIText-Heavy"
+                    : "SFUIText-Regular",
+              },
             ]}
           >
             {tooth.id}
@@ -102,8 +108,6 @@ const styles = StyleSheet.create({
   },
   toothNumber: {
     position: "absolute",
-    color: "black",
-    fontWeight: "bold",
     fontSize: 18,
   },
 });

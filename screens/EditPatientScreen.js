@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Platform } from "react-native";
+import { View, StyleSheet, ScrollView, Platform, Text } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -86,12 +86,12 @@ function EditPatientScreen({ route, navigation }) {
           keyboardType="numeric"
         />
       </View>
-      <View style={{ marginTop: 20 }}>
-        <Button onPress={onSubmit} color="#2A86FF">
-          <Ionicons name="checkmark-sharp" size={24} color="white" />
-          Зберегти
-        </Button>
-      </View>
+      <Button
+        text="Зберегти"
+        icon={<Ionicons name="checkmark-sharp" size={24} color="white" />}
+        onPress={onSubmit}
+        color="#2A86FF"
+      ></Button>
     </ScrollView>
   );
 }
@@ -110,6 +110,12 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 25,
     height: "100%",
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
 });
 

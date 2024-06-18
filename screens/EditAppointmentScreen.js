@@ -441,12 +441,19 @@ function EditAppointmentScreen({ route, navigation }) {
           </View>
         </View>
       </View>
-      <View style={{ marginTop: 20 }}>
+      {/* <View style={{ marginTop: 20 }}>
         <Button onPress={onSubmit} color="#2A86FF">
           <Ionicons name="checkmark-sharp" size={24} color="white" />
           Зберегти
         </Button>
-      </View>
+      </View> */}
+
+      <Button
+        text="Зберегти"
+        icon={<Ionicons name="checkmark-sharp" size={24} color="white" />}
+        onPress={onSubmit}
+        color="#2A86FF"
+      ></Button>
     </ScrollView>
   );
 }

@@ -104,6 +104,7 @@ function PatientScreen({ route, navigation }) {
         },
         {
           text: "Видалити",
+          style: "destructive",
           onPress: () => {
             setIsLoading(true);
             appointmentsApi
@@ -139,28 +140,30 @@ function PatientScreen({ route, navigation }) {
         <View style={styles.patientButtons}>
           <View style={{ flex: 1 }}>
             <Button
+              text="Формула зубів"
               onPress={() =>
                 navigation.navigate("TeethChart", {
                   teeth: teeth,
                   appointments: appointments,
                 })
               }
-            >
-              Формула зубів
-            </Button>
+              color="#2A86FF"
+            ></Button>
           </View>
           <View style={{ marginLeft: 15, width: 50 }}>
             <Button
+              icon={
+                <FontAwesome
+                  name="phone"
+                  size={23}
+                  color="white"
+                  style={styles.buttonIcon}
+                />
+              }
+              style={{ justifyContent: "center", alignItems: "center" }}
               onPress={() => Linking.openURL("tel:" + phone)}
               color="#84D269"
-            >
-              <FontAwesome
-                name="phone"
-                size={23}
-                color="white"
-                style={styles.buttonIcon}
-              />
-            </Button>
+            ></Button>
           </View>
         </View>
       </View>
@@ -363,6 +366,8 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   buttonIcon: {
+    position: "absolute",
+    left: -9,
     ...Platform.select({
       ios: {
         lineHeight: 48,

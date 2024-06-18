@@ -362,10 +362,12 @@ function AddAppointmentScreen({ route, navigation }) {
         </View>
       </View>
       <View style={{ marginTop: 20 }}>
-        <Button onPress={onSubmit} color="#87CC6F">
-          <Ionicons style={{ height: 24 }} name="add" size={20} color="white" />
-          Додати прийом
-        </Button>
+        <Button
+          text="Додати прийом"
+          icon={<Ionicons name="add" size={24} color="white" />}
+          onPress={onSubmit}
+          color="#2A86FF"
+        ></Button>
       </View>
     </ScrollView>
   );

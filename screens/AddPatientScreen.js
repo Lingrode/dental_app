@@ -94,10 +94,12 @@ function AddPatientScreen({ route, navigation }) {
         />
       </View>
       <View style={{ marginTop: 20 }}>
-        <Button onPress={onSubmit} color="#87CC6F">
-          <Ionicons style={{ height: 24 }} name="add" size={20} color="white" />
-          Додати пацієнта
-        </Button>
+        <Button
+          text="Додати пацієнта"
+          icon={<Ionicons name="add" size={24} color="white" />}
+          onPress={onSubmit}
+          color="#2A86FF"
+        ></Button>
       </View>
     </ScrollView>
   );
